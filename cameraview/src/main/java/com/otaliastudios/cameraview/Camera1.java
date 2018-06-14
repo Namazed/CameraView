@@ -409,8 +409,16 @@ class Camera1 extends CameraController implements Camera.PreviewCallback, Camera
         schedule(mFlashTask, true, new Runnable() {
             @Override
             public void run() {
-                Camera.Parameters params = mCamera.getParameters();
-                if (mergeFlash(params, old)) mCamera.setParameters(params);
+                try {
+                    if (mCamera == null) {
+                        return;
+                    }
+                    Camera.Parameters params = mCamera.getParameters();
+                    if (mergeFlash(params, old)) mCamera.setParameters(params);
+                } catch (Exception e) {
+                    LOG.e(e);
+                    mCameraCallbacks.dispatchError(new CameraException(e));
+                }
             }
         });
     }
