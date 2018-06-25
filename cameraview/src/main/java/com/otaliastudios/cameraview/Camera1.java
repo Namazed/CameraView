@@ -804,29 +804,41 @@ class Camera1 extends CameraController implements Camera.PreviewCallback, Camera
                         viewWidthF, viewHeightF, computeSensorToViewOffset());
                 List<Camera.Area> meteringAreas1 = meteringAreas2.subList(0, 1);
 
-                // At this point we are sure that camera supports auto focus... right? Look at CameraView.onTouchEvent().
-                Camera.Parameters params = mCamera.getParameters();
-                int maxAF = params.getMaxNumFocusAreas();
-                int maxAE = params.getMaxNumMeteringAreas();
-                if (maxAF > 0) params.setFocusAreas(maxAF > 1 ? meteringAreas2 : meteringAreas1);
-                if (maxAE > 0) params.setMeteringAreas(maxAE > 1 ? meteringAreas2 : meteringAreas1);
-                params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-                mCamera.setParameters(params);
-                mCameraCallbacks.dispatchOnFocusStart(gesture, p);
-                // TODO this is not guaranteed to be called... Fix.
-                mCamera.autoFocus(new Camera.AutoFocusCallback() {
-                    @Override
-                    public void onAutoFocus(boolean success, Camera camera) {
-                        // TODO lock auto exposure and white balance for a while
-                        mCameraCallbacks.dispatchOnFocusEnd(gesture, success, p);
-                        mHandler.get().removeCallbacks(mPostFocusResetRunnable);
-                        mHandler.get().postDelayed(mPostFocusResetRunnable, mPostFocusResetDelay);
-                    }
-                });
+
+                if (mCamera == null) {
+                    return;
+                }
+
+                try {
+                    // At this point we are sure that camera supports auto focus... right? Look at CameraView.onTouchEvent().
+                    setParametersForAutoFocus(meteringAreas1, meteringAreas2);
+                    mCameraCallbacks.dispatchOnFocusStart(gesture, p);
+                    // TODO this is not guaranteed to be called... Fix.
+                    mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                        @Override
+                        public void onAutoFocus(boolean success, Camera camera) {
+                            // TODO lock auto exposure and white balance for a while
+                            mCameraCallbacks.dispatchOnFocusEnd(gesture, success, p);
+                            mHandler.get().removeCallbacks(mPostFocusResetRunnable);
+                            mHandler.get().postDelayed(mPostFocusResetRunnable, mPostFocusResetDelay);
+                        }
+                    });
+                } catch (Exception e) {
+                    mCameraCallbacks.dispatchError(new CameraException(e));
+                }
             }
         });
     }
 
+    private void setParametersForAutoFocus(List<Camera.Area> meteringAreas1, List<Camera.Area> meteringAreas2) throws RuntimeException {
+        Camera.Parameters params = mCamera.getParameters();
+        int maxAF = params.getMaxNumFocusAreas();
+        int maxAE = params.getMaxNumMeteringAreas();
+        if (maxAF > 0) params.setFocusAreas(maxAF > 1 ? meteringAreas2 : meteringAreas1);
+        if (maxAE > 0) params.setMeteringAreas(maxAE > 1 ? meteringAreas2 : meteringAreas1);
+        params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        mCamera.setParameters(params);
+    }
 
     @WorkerThread
     private static List<Camera.Area> computeMeteringAreas(double viewClickX, double viewClickY,

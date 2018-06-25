@@ -1,15 +1,11 @@
 package com.otaliastudios.cameraview;
 
 
-import android.annotation.TargetApi;
-import android.app.Instrumentation;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
-import android.support.test.internal.runner.InstrumentationConnection;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Test;
@@ -17,8 +13,13 @@ import org.junit.runner.RunWith;
 
 import java.io.ByteArrayOutputStream;
 
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
@@ -34,6 +35,11 @@ public class CameraUtilsTest extends BaseTest {
 
         when(pm.hasSystemFeature(anyString())).thenReturn(false);
         assertFalse(CameraUtils.hasCameras(context));
+    }
+
+    @Test
+    public void testHasCameraFacingBack() {
+        assertTrue(CameraUtils.hasCameraFacing(Facing.BACK));
     }
 
     // Encodes bitmap and decodes again using our utility.
@@ -88,7 +94,6 @@ public class CameraUtilsTest extends BaseTest {
 
         // TODO: improve when we add EXIF writing to byte arrays
     }
-
 
     @Test
     public void testDecodeDownscaledBitmap() {

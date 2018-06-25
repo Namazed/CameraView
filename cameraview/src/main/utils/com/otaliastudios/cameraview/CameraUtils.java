@@ -19,7 +19,6 @@ import java.io.InputStream;
  */
 public class CameraUtils {
 
-
     /**
      * Determines whether the device has valid camera sensors, so the library
      * can be used.
@@ -35,7 +34,6 @@ public class CameraUtils {
                 || manager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
     }
 
-
     /**
      * Determines whether the device has a valid camera sensor with the given
      * Facing value, so that a session can be started.
@@ -44,16 +42,41 @@ public class CameraUtils {
      * @param facing either {@link Facing#BACK} or {@link Facing#FRONT}
      * @return true if such sensor exists
      */
+    @Deprecated
     public static boolean hasCameraFacing(Context context, Facing facing) {
         int internal = new Mapper.Mapper1().map(facing);
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-        for (int i = 0, count = Camera.getNumberOfCameras(); i < count; i++) {
-            Camera.getCameraInfo(i, cameraInfo);
-            if (cameraInfo.facing == internal) return true;
+        try {
+            for (int i = 0, count = Camera.getNumberOfCameras(); i < count; i++) {
+                Camera.getCameraInfo(i, cameraInfo);
+                if (cameraInfo.facing == internal) return true;
+            }
+        } catch (Exception e) {
+            return false;
         }
         return false;
     }
 
+    /**
+     * Determines whether the device has a valid camera sensor with the given
+     * Facing value, so that a session can be started.
+     *
+     * @param facing either {@link Facing#BACK} or {@link Facing#FRONT}
+     * @return true if such sensor exists
+     */
+    public static boolean hasCameraFacing(Facing facing) {
+        int internal = new Mapper.Mapper1().map(facing);
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        try {
+            for (int i = 0, count = Camera.getNumberOfCameras(); i < count; i++) {
+                Camera.getCameraInfo(i, cameraInfo);
+                if (cameraInfo.facing == internal) return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
+    }
 
     /**
      * Decodes an input byte array and outputs a Bitmap that is ready to be displayed.
@@ -98,7 +121,6 @@ public class CameraUtils {
             }
         });
     }
-
 
     // TODO ignores flipping
     @SuppressWarnings({"SuspiciousNameCombination", "WeakerAccess"})
@@ -179,7 +201,6 @@ public class CameraUtils {
         return bitmap;
     }
 
-
     private static int computeSampleSize(int width, int height, int maxWidth, int maxHeight) {
         // https://developer.android.com/topic/performance/graphics/load-bitmap.html
         int inSampleSize = 1;
@@ -191,7 +212,6 @@ public class CameraUtils {
         }
         return inSampleSize;
     }
-
 
     /**
      * Receives callbacks about a bitmap decoding operation.
