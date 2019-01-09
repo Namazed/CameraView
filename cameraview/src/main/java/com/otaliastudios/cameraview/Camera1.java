@@ -827,7 +827,7 @@ class Camera1 extends CameraController implements Camera.PreviewCallback, Camera
 
 
                 if (mCamera == null) {
-                    LOG.e("startAutoFocus:", "mCamera is null when calling autoFocus", e);
+                    LOG.e("startAutoFocus:", "mCamera is null when calling autoFocus");
                     mCameraCallbacks.dispatchOnFocusEnd(gesture, false, p);
                     return;
                 }
