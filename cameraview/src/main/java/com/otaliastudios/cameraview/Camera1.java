@@ -282,7 +282,7 @@ class Camera1 extends CameraController implements Camera.PreviewCallback, Camera
             case Camera.CAMERA_ERROR_UNKNOWN: reason = CameraException.REASON_UNKNOWN; break;
             default: reason = CameraException.REASON_UNKNOWN;
         }
-        throw new CameraException(runtime, reason);
+        mCameraCallbacks.dispatchError(new CameraException(runtime, reason));
     }
 
     @Override
