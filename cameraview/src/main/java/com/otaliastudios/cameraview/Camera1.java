@@ -119,7 +119,7 @@ class Camera1 extends CameraController implements Camera.PreviewCallback, Camera
             } else {
                 mCamera.setPreviewTexture((SurfaceTexture) output);
             }
-        } catch (IOException e) {
+        } catch (NullPointerException | IOException e) {
             Log.e("bindToSurface:", "Failed to bind.", e);
             throw new CameraException(e, CameraException.REASON_FAILED_TO_START_PREVIEW);
         }
