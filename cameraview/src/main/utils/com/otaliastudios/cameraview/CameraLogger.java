@@ -6,8 +6,9 @@ import android.util.Log;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Utility class that can log traces and info.
@@ -52,11 +53,11 @@ public final class CameraLogger {
     static String lastTag;
 
     private static int sLevel;
-    private static List<Logger> sLoggers;
+    private static Set<Logger> sLoggers;
 
     static {
         setLogLevel(LEVEL_ERROR);
-        sLoggers = new ArrayList<>();
+        sLoggers = Collections.newSetFromMap(new ConcurrentHashMap<Logger, Boolean>());
         sLoggers.add(new Logger() {
             @Override
             public void log(int level, String tag, String message, @Nullable Throwable throwable) {

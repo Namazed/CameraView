@@ -207,7 +207,7 @@ task mergedCoverageReport(type: JacocoReport) {
 
     reports.xml.enabled = true
     reports.html.enabled = true
-    reports.xml.destination = "$reportsDirectory/mergedCoverageReport/report.xml"
+    reports.xml.destination = file("$reportsDirectory/mergedCoverageReport/report.xml")
 }
 
 //endregion
