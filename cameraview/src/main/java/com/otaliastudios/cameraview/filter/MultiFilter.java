@@ -207,7 +207,7 @@ public class MultiFilter implements Filter, OneParameterFilter, TwoParameterFilt
     }
 
     @Override
-    public void draw(long timestampUs, @NonNull float[] transformMatrix) {
+    public void draw(long timestampUs, @NonNull float[] transformMatrix, int textureId) {
         synchronized (lock) {
             for (int i = 0; i < filters.size(); i++) {
                 boolean isFirst = i == 0;
@@ -236,9 +236,9 @@ public class MultiFilter implements Filter, OneParameterFilter, TwoParameterFilt
                 // The first filter should apply all the transformations. Then,
                 // since they are applied, we should use a no-op matrix.
                 if (isFirst) {
-                    filter.draw(timestampUs, transformMatrix);
+                    filter.draw(timestampUs, transformMatrix, textureId);
                 } else {
-                    filter.draw(timestampUs, Egloo.IDENTITY_MATRIX);
+                    filter.draw(timestampUs, Egloo.IDENTITY_MATRIX, textureId);
                 }
 
                 // Set the input for the next cycle:
