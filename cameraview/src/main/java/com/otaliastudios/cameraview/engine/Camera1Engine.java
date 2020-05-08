@@ -122,7 +122,7 @@ public class Camera1Engine extends CameraBaseEngine implements
     @EngineThread
     @Override
     protected void onPreviewStreamSizeChanged() {
-        restartPreview();
+//        restartPreview();
     }
 
     @EngineThread
