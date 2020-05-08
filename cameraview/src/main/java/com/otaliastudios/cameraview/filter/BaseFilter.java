@@ -151,18 +151,6 @@ public abstract class BaseFilter implements Filter {
         size = new Size(width, height);
     }
 
-    @Override
-    public void draw(long timestampUs, @NonNull float[] transformMatrix) {
-        if (program == null) {
-            LOG.w("Filter.draw() called after destroying the filter. " +
-                    "This can happen rarely because of threading.");
-        } else {
-            onPreDraw(timestampUs, transformMatrix);
-            onDraw(timestampUs);
-            onPostDraw(timestampUs);
-        }
-    }
-
     protected void onPreDraw(long timestampUs, @NonNull float[] transformMatrix) {
         program.setTextureTransform(transformMatrix);
         program.onPreDraw(programDrawable, programDrawable.getModelMatrix());
@@ -202,6 +190,18 @@ public abstract class BaseFilter implements Filter {
             throw new RuntimeException("Filters should have a public no-arguments constructor.", e);
         } catch (InstantiationException e) {
             throw new RuntimeException("Filters should have a public no-arguments constructor.", e);
+        }
+    }
+
+    @Override
+    public void draw(long timestampUs, @NonNull float[] transformMatrix, int textureId) {
+        if (program == null) {
+            LOG.w("Filter.draw() called after destroying the filter. " +
+                    "This can happen rarely because of threading.");
+        } else {
+            onPreDraw(timestampUs, transformMatrix);
+            onDraw(timestampUs);
+            onPostDraw(timestampUs);
         }
     }
 }

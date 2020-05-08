@@ -82,7 +82,7 @@ public class GlTextureDrawer {
         GLES20.glUseProgram(mProgramHandle);
         Egloo.checkGlError("glUseProgram(handle)");
         mTexture.bind();
-        mFilter.draw(timestampUs, mTextureTransform);
+        mFilter.draw(timestampUs, mTextureTransform, mTexture.getId());
         mTexture.unbind();
         GLES20.glUseProgram(0);
         Egloo.checkGlError("glUseProgram(0)");
