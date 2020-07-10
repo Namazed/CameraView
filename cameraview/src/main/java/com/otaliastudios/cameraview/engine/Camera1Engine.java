@@ -281,8 +281,6 @@ public class Camera1Engine extends CameraBaseEngine implements
             throw new CameraException(e, CameraException.REASON_FAILED_TO_START_PREVIEW);
         }
 
-        mCamera.release();
-
         mCamera.setPreviewCallbackWithBuffer(null); // Release anything left
         mCamera.setPreviewCallbackWithBuffer(this); // Add ourselves
         getFrameManager().setUp(PREVIEW_FORMAT, mPreviewStreamSize, getAngles());
