@@ -315,9 +315,10 @@ public class Camera1Engine extends CameraBaseEngine implements
         }
         mPictureRecorder = null;
         getFrameManager().release();
-        LOG.i("onStopPreview:", "Releasing preview buffers.");
-        mCamera.setPreviewCallbackWithBuffer(null); // Release anything left
         try {
+            LOG.i("onStopPreview:", "Releasing preview buffers.");
+            mCamera.setPreviewCallbackWithBuffer(null); // Release anything left
+
             LOG.i("onStopPreview:", "Stopping preview.");
             mCamera.stopPreview();
             LOG.i("onStopPreview:", "Stopped preview.");
