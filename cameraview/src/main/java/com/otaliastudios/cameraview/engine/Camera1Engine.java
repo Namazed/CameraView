@@ -271,6 +271,10 @@ public class Camera1Engine extends CameraBaseEngine implements
         // NV21 should be the default, but let's make sure, since YuvImage will only support this
         // and a few others
         params.setPreviewFormat(ImageFormat.NV21);
+        if (mPreviewStreamSize == null) {
+            LOG.e("onStartPreview:", "Failed to set previewSize, because mPreviewStreamSize == null. Maybe camera already released?");
+            throw new CameraException(CameraException.REASON_FAILED_TO_START_PREVIEW);
+        }
         // setPreviewSize is not allowed during preview
         params.setPreviewSize(mPreviewStreamSize.getWidth(), mPreviewStreamSize.getHeight());
         setPictureSize(params);
@@ -281,12 +285,12 @@ public class Camera1Engine extends CameraBaseEngine implements
             throw new CameraException(e, CameraException.REASON_FAILED_TO_START_PREVIEW);
         }
 
-        mCamera.setPreviewCallbackWithBuffer(null); // Release anything left
-        mCamera.setPreviewCallbackWithBuffer(this); // Add ourselves
-        getFrameManager().setUp(PREVIEW_FORMAT, mPreviewStreamSize, getAngles());
-
-        LOG.i("onStartPreview", "Starting preview with startPreview().");
         try {
+            mCamera.setPreviewCallbackWithBuffer(null); // Release anything left
+            mCamera.setPreviewCallbackWithBuffer(this); // Add ourselves
+            getFrameManager().setUp(PREVIEW_FORMAT, mPreviewStreamSize, getAngles());
+
+            LOG.i("onStartPreview", "Starting preview with startPreview().");
             mCamera.startPreview();
         } catch (Exception e) {
             LOG.e("onStartPreview", "Failed to start preview.", e);
@@ -311,9 +315,10 @@ public class Camera1Engine extends CameraBaseEngine implements
         }
         mPictureRecorder = null;
         getFrameManager().release();
-        LOG.i("onStopPreview:", "Releasing preview buffers.");
-        mCamera.setPreviewCallbackWithBuffer(null); // Release anything left
         try {
+            LOG.i("onStopPreview:", "Releasing preview buffers.");
+            mCamera.setPreviewCallbackWithBuffer(null); // Release anything left
+
             LOG.i("onStopPreview:", "Stopping preview.");
             mCamera.stopPreview();
             LOG.i("onStopPreview:", "Stopped preview.");
