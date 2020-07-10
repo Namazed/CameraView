@@ -272,7 +272,6 @@ public class Camera1Engine extends CameraBaseEngine implements
         // and a few others
         params.setPreviewFormat(ImageFormat.NV21);
         // setPreviewSize is not allowed during preview
-        mPreviewStreamSize = null;
         params.setPreviewSize(mPreviewStreamSize.getWidth(), mPreviewStreamSize.getHeight());
         setPictureSize(params);
         try {
@@ -281,6 +280,8 @@ public class Camera1Engine extends CameraBaseEngine implements
             LOG.e("onStartPreview:", "Failed to set params for camera. Maybe incorrect parameter put in params?");
             throw new CameraException(e, CameraException.REASON_FAILED_TO_START_PREVIEW);
         }
+
+        mCamera.release();
 
         mCamera.setPreviewCallbackWithBuffer(null); // Release anything left
         mCamera.setPreviewCallbackWithBuffer(this); // Add ourselves
