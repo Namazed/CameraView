@@ -272,6 +272,7 @@ public class Camera1Engine extends CameraBaseEngine implements
         // and a few others
         params.setPreviewFormat(ImageFormat.NV21);
         // setPreviewSize is not allowed during preview
+        mPreviewStreamSize = null;
         params.setPreviewSize(mPreviewStreamSize.getWidth(), mPreviewStreamSize.getHeight());
         setPictureSize(params);
         try {
