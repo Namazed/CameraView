@@ -237,7 +237,7 @@ public class Camera1Engine extends CameraBaseEngine implements
             } else {
                 throw new RuntimeException("Unknown CameraPreview output class.");
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOG.e("onStartBind:", "Failed to bind.", e);
             throw new CameraException(e, CameraException.REASON_FAILED_TO_START_PREVIEW);
         }
@@ -342,7 +342,7 @@ public class Camera1Engine extends CameraBaseEngine implements
             } else {
                 throw new RuntimeException("Unknown CameraPreview output class.");
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             // NOTE: when this happens, the next onStopEngine() call hangs on camera.release(),
             // Not sure for how long. This causes the destroy() flow to fail the timeout.
             LOG.e("onStopBind", "Could not release surface", e);
